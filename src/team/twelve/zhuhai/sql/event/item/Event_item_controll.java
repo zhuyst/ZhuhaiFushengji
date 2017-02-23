@@ -1,9 +1,6 @@
 package team.twelve.zhuhai.sql.event.item;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import com.mysql.jdbc.PreparedStatement;
+import java.util.Map;
 
 import team.twelve.zhuhai.sql.JDBC;
 import team.twelve.zhuhai.sql.item.Item_controll;
@@ -26,25 +23,13 @@ public class Event_item_controll {
 	
 	//获取关于物价变动的事件详情
 	public Event_item_data get_Event_item_data(int ID){
-		Event_item_data data = null;
-		PreparedStatement pst;
-		ResultSet rs;
-		String sql = "select Message,Effect_item_ID,Effect_handle,Effect_number from event_item where ID = '" + ID + "'";
-		try {
-			pst = (PreparedStatement) mysql.getConnection().prepareStatement(sql);
-			rs = pst.executeQuery();
-			rs.next();
-			String message = rs.getString(1);
-			String effect_item_ID = rs.getString(2);
-			char effect_handle = rs.getString(3).charAt(0);
-			int effect_number = rs.getInt(4);
-			data = new Event_item_data(ID, message, effect_item_ID, effect_handle, effect_number);
-			pst.close();
-			rs.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Event_item_data data = new Event_item_data();
+		String[] params = data.getFiledName();
+		String sql = "select * from event_item where ID = '" + ID + "'";
+		
+		Map<String, String> result = mysql.select(sql, params);
+		data = new Event_item_data(result);
+		
 		return data;
 	}
 	

@@ -1,9 +1,6 @@
 package team.twelve.zhuhai.sql.global;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import com.mysql.jdbc.PreparedStatement;
+import java.util.Map;
 
 import team.twelve.zhuhai.sql.JDBC;
 
@@ -22,35 +19,14 @@ public class Global_controll{
 	
 	//获取数据
 	public int get_data(Global_enum global_enum){
-		int number = 0;
-		PreparedStatement pst;
-		ResultSet rs;
 		String sql = "select " + global_enum + " from global";
-		try {
-			pst = (PreparedStatement) mysql.getConnection().prepareStatement(sql);
-			rs = pst.executeQuery();
-			rs.next();
-			number = rs.getInt(1);
-			pst.close();
-			rs.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return number;
+		Map<String, String> result = mysql.select(sql, new String[]{global_enum.toString()});
+		return Integer.parseInt(result.get(global_enum.toString()));
 	}
 	
 	//更改数据
 	public void update_data(Global_enum global_enum,String data){
-		PreparedStatement pst;
 		String sql = "update global set " + global_enum + "='" + data + "'";
-		try {
-			pst = (PreparedStatement) mysql.getConnection().prepareStatement(sql);
-			pst.executeUpdate();
-			pst.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		mysql.update(sql);
 	}
 }

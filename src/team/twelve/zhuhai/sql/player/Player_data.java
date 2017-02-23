@@ -1,11 +1,15 @@
 package team.twelve.zhuhai.sql.player;
 
+import java.util.Map;
+
+import team.twelve.zhuhai.sql.Data_filedname;
+
 /**
  * @author zhuyst
  * 存储Player表中单行的数据
  */
 
-public class Player_data {
+public class Player_data extends Data_filedname{
 	private int ID;
 	private String name; //玩家用户名
 	private int money; //金钱
@@ -18,20 +22,25 @@ public class Player_data {
 	private int apartment_item_max; //出租屋的最大存放量
 	private int[] item; //各物品的用户数
 	
-	public Player_data(int ID,String name,int money,Integer deposit,int debt,int day,int fame,int health,int apartment_item_number,
-			int apartment_item_max,int[] item,int item_number){
-		this.ID = ID;
-		this.name = name;
-		this.money = money;
-		this.deposit = deposit;
-		this.debt = debt;
-		this.day = day;
-		this.fame = fame;
-		this.health = health;
-		this.apartment_item_number = apartment_item_number;
-		this.apartment_item_max = apartment_item_max;
+	public Player_data(){
+		
+	}
+	
+	public Player_data(Map<String, String> result,int item_number){
+		this.ID = Integer.parseInt(result.get("ID"));
+		this.name = result.get("Name");
+		this.money = Integer.parseInt(result.get("money"));
+		this.deposit = Integer.parseInt(result.get("deposit"));
+		this.debt = Integer.parseInt(result.get("debt"));
+		this.day = Integer.parseInt(result.get("day"));
+		this.fame = Integer.parseInt(result.get("fame"));
+		this.health = Integer.parseInt(result.get("health"));
+		this.apartment_item_number = Integer.parseInt(result.get("apartment_item_number"));
+		this.apartment_item_max = Integer.parseInt(result.get("apartment_item_max"));
 		this.item = new int[item_number];
-		System.arraycopy(item, 0, this.item, 0, item_number);
+		for(int i = 1;i <= item_number;i++){
+			item[i - 1] = Integer.parseInt(result.get("Item_" + i));
+		}
 	}
 	
 	public int getID() {

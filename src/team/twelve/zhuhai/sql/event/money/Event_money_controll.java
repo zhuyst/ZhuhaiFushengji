@@ -1,9 +1,6 @@
 package team.twelve.zhuhai.sql.event.money;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import com.mysql.jdbc.PreparedStatement;
+import java.util.Map;
 
 import team.twelve.zhuhai.sql.JDBC;
 import team.twelve.zhuhai.sql.player.Player_controll;
@@ -27,31 +24,12 @@ public class Event_money_controll{
 	
 	//获取关于意外得财/失财的事件的详情
 	public Event_money_data get_event_money_data(int ID){
-		Event_money_data data = null;
-		PreparedStatement pst;
-		ResultSet rs;
-		String sql = "select Message,Fame_handle,Fame_number,Health_handle,Health_number,Effect_ID"
-				+ ",Effect_handle,Effect_number from event_money where ID = '" + ID + "'";
-		try {
-			pst = (PreparedStatement) mysql.getConnection().prepareStatement(sql);
-			rs = pst.executeQuery();
-			rs.next();
-			String message = rs.getString(1);
-			String fame_handle = rs.getString(2);
-			int fame_number = rs.getInt(3);
-			String health_handle = rs.getString(4);
-			int health_number = rs.getInt(5);
-			int effect_ID = rs.getInt(6);
-			String effect_handle = rs.getString(7);
-			double effect_number = rs.getDouble(8);
-			data = new Event_money_data(ID, message, fame_handle, fame_number, health_handle,
-					health_number, effect_ID, effect_handle, effect_number);
-			pst.close();
-			rs.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Event_money_data data = new Event_money_data();
+		String[] params = data.getFiledName();
+		String sql = "select * from event_money where ID = '" + ID + "'";
+		
+		Map<String, String> result = mysql.select(sql, params);
+		data = new Event_money_data(result);
 		
 		return data;
 	}

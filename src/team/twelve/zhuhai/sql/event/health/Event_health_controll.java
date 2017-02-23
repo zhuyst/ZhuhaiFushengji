@@ -1,9 +1,6 @@
 package team.twelve.zhuhai.sql.event.health;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import com.mysql.jdbc.PreparedStatement;
+import java.util.Map;
 
 import team.twelve.zhuhai.sql.JDBC;
 import team.twelve.zhuhai.sql.player.Player_controll;
@@ -27,23 +24,13 @@ public class Event_health_controll{
 	
 	//获取关于健康受损的事件详情
 	public Event_health_data get_Event_health_data(int ID){
-		Event_health_data data = null;
-		PreparedStatement pst;
-		ResultSet rs;
-		String sql = "select Message,Effect_number from event_health where ID = '" + ID + "'";
-		try {
-			pst = (PreparedStatement) mysql.getConnection().prepareStatement(sql);
-			rs = pst.executeQuery();
-			rs.next();
-			String message = rs.getString(1);
-			int effect_number = rs.getInt(2);
-			data = new Event_health_data(ID, message, effect_number);
-			pst.close();
-			rs.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Event_health_data data = new Event_health_data();
+		String[] params = data.getFiledName();
+		String sql = "select * from event_health where ID = '" + ID + "'";
+		
+		Map<String, String> result = mysql.select(sql, params);
+		data = new Event_health_data(result);
+		
 		return data;
 	}
 	
