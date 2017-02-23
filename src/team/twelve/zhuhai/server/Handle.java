@@ -52,25 +52,29 @@ public class Handle {
             buffer.flip();
             receivedString = Charset.forName("UTF-8").newDecoder().decode(buffer).toString();
             receivedString = URLDecoder.decode(receivedString,"UTF-8");
-			mode = receivedString.split(" ",2)[0];
-			uri = receivedString.split(" ",3)[1];
-			
-			String[] typeTemp = uri.split("\\.");
-			type = typeTemp[typeTemp.length - 1];
-			//对于没有后缀的uri，默认当作html类型
-			if(type.equals(uri)){
-				type = "html";
-				//补上.html后缀
-				if(!uri.equals("/")){
-					uri += ".html";
-				}
+            try {
+    			mode = receivedString.split(" ",2)[0];
+    			uri = receivedString.split(" ",3)[1];
+    			
+    			String[] typeTemp = uri.split("\\.");
+    			type = typeTemp[typeTemp.length - 1];
+    			//对于没有后缀的uri，默认当作html类型
+    			if(type.equals(uri)){
+    				type = "html";
+    				//补上.html后缀
+    				if(!uri.equals("/")){
+    					uri += ".html";
+    				}
+    			}
+    			
+    			String[] contentTemp = receivedString.split("\r\n\r\n");
+    			if(contentTemp.length - 1 > 0){
+    				content = contentTemp[1];
+    			}
+                key.interestOps(SelectionKey.OP_WRITE); 
+			} catch (ArrayIndexOutOfBoundsException e) {
+				// TODO: handle exception
 			}
-			
-			String[] contentTemp = receivedString.split("\r\n\r\n");
-			if(contentTemp.length - 1 > 0){
-				content = contentTemp[1];
-			}
-            key.interestOps(SelectionKey.OP_WRITE); 
             
 //            System.out.println(receivedString);
 //            System.out.println(uri);
