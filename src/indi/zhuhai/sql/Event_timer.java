@@ -3,7 +3,6 @@ package indi.zhuhai.sql;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import indi.zhuhai.sql.controller.Main_controll;
 import indi.zhuhai.sql.dataenum.Global_enum;
 
 /**

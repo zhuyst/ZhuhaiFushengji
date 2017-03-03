@@ -2,7 +2,6 @@ package indi.zhuhai.sql;
 
 import org.json.JSONArray;
 
-import indi.zhuhai.sql.controller.Main_controll;
 import indi.zhuhai.sql.controller.Player_controll;
 import indi.zhuhai.sql.data.Item_data;
 import indi.zhuhai.sql.data.Pill_data;
@@ -225,6 +224,7 @@ public class Respond_game {
 		}catch (Exception e) {
 			respond = "0";
 			System.out.println("Î´Öª´íÎó");
+			e.printStackTrace();
 		}
 		
 		return respond;
@@ -250,236 +250,148 @@ public class Respond_game {
 		return result; 
 	}
 	
-	private String getPlayer_data_json(String name){
-		Player_data data = main_controll.getPlayer_controll().get_player_data(name);
-		int data_number = 9;
-		
+	private String getJson_string(String[] data){
 		String json_string = "{\"c2array\":true,\"size\":[";
-		json_string += String.valueOf(data_number);
+		json_string += String.valueOf(data.length);
 		json_string += ",1,1],\"data\":";
 		
 		JSONArray jsonArray_1 = new JSONArray();
-		JSONArray[] jsonArray_2 = new JSONArray[data_number];
-		JSONArray[] jsonArray_3 = new JSONArray[data_number];
-		for(int i = 0;i < data_number;i++){
+		JSONArray[] jsonArray_2 = new JSONArray[data.length];
+		JSONArray[] jsonArray_3 = new JSONArray[data.length];
+		for(int i = 0;i < data.length;i++){
 			jsonArray_2[i] = new JSONArray();
 			jsonArray_3[i] = new JSONArray();
 		}
-		jsonArray_3[0].put(data.getName());
-		jsonArray_3[1].put("" + data.getMoney());
-		jsonArray_3[2].put("" + data.getDay());
-		jsonArray_3[3].put("" + data.getDebt());
-		jsonArray_3[4].put("" + data.getDeposit());
-		jsonArray_3[5].put("" + data.getHealth());
-		jsonArray_3[6].put("" + data.getFame());
-		jsonArray_3[7].put("" + data.getApartment_item_number());
-		jsonArray_3[8].put("" + data.getApartment_item_max());
 		
-		for(int i = 0;i < data_number;i++){
+		for(int i = 0; i < data.length;i++){
+			jsonArray_3[i].put(data[i]);
 			jsonArray_2[i].put(jsonArray_3[i]);
 			jsonArray_1.put(jsonArray_2[i]);
 		}
 		
 		json_string += jsonArray_1.toString() + "}";
 		
+		return json_string;
+	}
+	
+	private String getPlayer_data_json(String name){
+		Player_data data = main_controll.getPlayer_controll().get_player_data(name);
+		final int DATA_NUMBER = 9;
+		
+		String[] strings = new String[DATA_NUMBER];
+		
+		strings[0] = data.getName();
+		strings[1] = "" + data.getMoney();
+		strings[2] = "" + data.getDay();
+		strings[3] = "" + data.getDebt();
+		strings[4] = "" + data.getDeposit();
+		strings[5] = "" + data.getHealth();
+		strings[6] = "" + data.getFame();
+		strings[7] = "" + data.getApartment_item_number();
+		strings[8] = "" + data.getApartment_item_max();
+		
 		if(data.getDay() == 40) 
 			main_controll.getRanking_list_controll().insert_new_winner(name);
 		
-		return json_string;
+		return getJson_string(strings);
 		
 	}
 	
 	private String getPlayer_item_json(String name){
 		Player_data data = main_controll.getPlayer_controll().get_player_data(name);
-		int item_number = main_controll.getGlobal_controll().get_data(Global_enum.Item_number);
-		int data_number = item_number * 2;
+		final int ITEM_NUMBER = main_controll.getGlobal_controll().get_data(Global_enum.Item_number);
+		final int DATA_NUMBER = ITEM_NUMBER * 2;
 		
-		String json_string = "{\"c2array\":true,\"size\":[";
-		json_string += String.valueOf(data_number);
-		json_string += ",1,1],\"data\":";
+		String[] strings = new String[DATA_NUMBER];
 		
-		JSONArray jsonArray_1 = new JSONArray();
-		JSONArray[] jsonArray_2 = new JSONArray[data_number];
-		JSONArray[] jsonArray_3 = new JSONArray[data_number];
-		for(int i = 0;i < data_number;i++){
-			jsonArray_2[i] = new JSONArray();
-			jsonArray_3[i] = new JSONArray();
+		for(int i = 0;i < ITEM_NUMBER;i++){
+			strings[i] = main_controll.getItem_controll().get_Item_data(i + 1).getName();
+			strings[i + ITEM_NUMBER] = "" + data.getItem()[i];
 		}
 		
-		for(int i = 0;i < item_number;i++){
-			jsonArray_3[i].put(main_controll.getItem_controll().get_Item_data(i + 1).getName());
-			jsonArray_3[i + item_number].put("" + data.getItem()[i]);
-		}
-		
-		for(int i = 0;i < data_number;i++){
-			jsonArray_2[i].put(jsonArray_3[i]);
-			jsonArray_1.put(jsonArray_2[i]);
-		}
-		
-		json_string += jsonArray_1.toString() + "}";
-		return json_string;
+		return getJson_string(strings);
 	}
 	
 	private String getRanking_list_json(){
 		Ranking_list_data data[] = main_controll.getRanking_list_controll().get_rangking_list();
-		int list_number = data[0].getPoint();
+		final int LIST_NUMBER = data[0].getPoint();
+		final int DATA_NUMBER = LIST_NUMBER * 2;
 		
-		String json_string = "{\"c2array\":true,\"size\":[";
-		json_string += String.valueOf(list_number * 2);
-		json_string += ",1,1],\"data\":";
+		String[] strings = new String[DATA_NUMBER];
 		
-		JSONArray jsonArray_1 = new JSONArray();
-		JSONArray[] jsonArray_2 = new JSONArray[list_number * 2];
-		JSONArray[] jsonArray_3 = new JSONArray[list_number * 2];
-		for(int i = 0;i < list_number * 2;i++){
-			jsonArray_2[i] = new JSONArray();
-			jsonArray_3[i] = new JSONArray();
+		for(int i = 0;i < LIST_NUMBER;i++){
+			strings[i] = data[i + 1].getName();
+			strings[i + LIST_NUMBER] = "" + data[i + 1].getPoint();
 		}
 		
-		for(int i = 0;i < list_number;i++){
-			jsonArray_3[i].put(data[i + 1].getName());
-			jsonArray_2[i].put(jsonArray_3[i]);
-			jsonArray_1.put(jsonArray_2[i]);
-		}
-		
-		for(int i = 0;i < list_number;i++){
-			jsonArray_3[i + list_number].put("" + data[i + 1].getPoint());
-			jsonArray_2[i + list_number].put(jsonArray_3[i + list_number]);
-			jsonArray_1.put(jsonArray_2[i + list_number]);
-		}
-		
-		json_string += jsonArray_1.toString() + "}";
-		return json_string;
+		return getJson_string(strings);
 	}
 	
 	private String getPill_price_json(){
-		int data_number = 8;
-		int pill_number = 4;
+		final int DATA_NUMBER = 8;
+		final int PILL_NUMBER = 4;
 		
-		String json_string = "{\"c2array\":true,\"size\":[";
-		json_string += String.valueOf(data_number);
-		json_string += ",1,1],\"data\":";
-		
-		JSONArray jsonArray_1 = new JSONArray();
-		JSONArray[] jsonArray_2 = new JSONArray[data_number];
-		JSONArray[] jsonArray_3 = new JSONArray[data_number];
-		for(int i = 0;i < data_number;i++){
-			jsonArray_2[i] = new JSONArray();
-			jsonArray_3[i] = new JSONArray();
-		}
+		String[] strings = new String[DATA_NUMBER];
 		
 		Pill_data f_pill = main_controll.getPill_controll().get_Pill_data(Pill_enum.F);
 		Pill_data w_pill = main_controll.getPill_controll().get_Pill_data(Pill_enum.W);
 		Pill_data r_pill = main_controll.getPill_controll().get_Pill_data(Pill_enum.R);
 		Pill_data j_pill = main_controll.getPill_controll().get_Pill_data(Pill_enum.J);
 		
-		Pill_data[] pill_data = new Pill_data[pill_number];
+		Pill_data[] pill_data = new Pill_data[PILL_NUMBER];
 		pill_data[0] = f_pill; pill_data[1] = w_pill;
 		pill_data[2] = r_pill; pill_data[3] = j_pill;
 		
-		for(int i = 0;i < pill_number;i++){
-			jsonArray_3[i].put("" + pill_data[i].getPrice());
-			jsonArray_2[i].put(jsonArray_3[i]);
-			jsonArray_1.put(jsonArray_2[i]);
+		for(int i = 0;i < PILL_NUMBER;i++){
+			strings[i] = "" + pill_data[i].getPrice();
+			strings[i + PILL_NUMBER] = "" + pill_data[i].getHealth();
 		}
 		
-		for(int i = 0;i < pill_number;i++){
-			jsonArray_3[i + pill_number].put("" + pill_data[i].getHealth());
-			jsonArray_2[i + pill_number].put(jsonArray_3[i + pill_number]);
-			jsonArray_1.put(jsonArray_2[i + pill_number]);
-		}
-		
-		json_string += jsonArray_1.toString() + "}";
-		return json_string;
+		return getJson_string(strings);
 	}
 	
 	private String getItemlist_json(){
-		int data_number = 6;
-		int max = main_controll.getGlobal_controll().get_data(Global_enum.Item_number);
-		int min = 1;
-		int[] randomnumber = getRandonNumber(max,min,data_number);
+		final int DATA_NUMBER = 6;
+		final int MAX = main_controll.getGlobal_controll().get_data(Global_enum.Item_number);
+		final int MIN = 1;
+		int[] randomnumber = getRandonNumber(MAX,MIN,DATA_NUMBER);
 		
-		String json_string = "{\"c2array\":true,\"size\":[";
-		json_string += String.valueOf(data_number);
-		json_string += ",1,1],\"data\":";
+		String[] strings = new String[DATA_NUMBER];
 		
-		JSONArray jsonArray_1 = new JSONArray();
-		JSONArray[] jsonArray_2 = new JSONArray[data_number];
-		JSONArray[] jsonArray_3 = new JSONArray[data_number];
-		for(int i = 0;i < data_number;i++){
-			jsonArray_2[i] = new JSONArray();
-			jsonArray_3[i] = new JSONArray();
+		for(int i = 0;i < DATA_NUMBER;i++){
+			strings[i] = "" + randomnumber[i];
 		}
 		
-		for(int i = 0;i < data_number;i++){
-			jsonArray_3[i].put("" + randomnumber[i]);
-			jsonArray_2[i].put(jsonArray_3[i]);
-			jsonArray_1.put(jsonArray_2[i]);
-		}
-		
-		json_string += jsonArray_1.toString() + "}";
-		return json_string;
+		return getJson_string(strings);
 	}
 	
 	private String getItemdata_json(int item_ID){
-		int data_number = 4;
+		final int DATA_NUMBER = 4;
 		Item_data data = main_controll.getItem_controll().get_Item_data(item_ID);
 		
-		String json_string = "{\"c2array\":true,\"size\":[";
-		json_string += String.valueOf(data_number);
-		json_string += ",1,1],\"data\":";
+		String[] strings = new String[DATA_NUMBER];
 		
-		JSONArray jsonArray_1 = new JSONArray();
-		JSONArray[] jsonArray_2 = new JSONArray[data_number];
-		JSONArray[] jsonArray_3 = new JSONArray[data_number];
-		for(int i = 0;i < data_number;i++){
-			jsonArray_2[i] = new JSONArray();
-			jsonArray_3[i] = new JSONArray();
-		}
-		
-		jsonArray_3[0].put(data.getID());
-		jsonArray_3[1].put(data.getName());
-		jsonArray_3[2].put(data.getIntroduce());
+		strings[0] = "" + data.getID();
+		strings[1] = data.getName();
+		strings[2] = data.getIntroduce();
 		
 		int base_price = data.getPrice();
-		int max = (int)(base_price * 1.4);
-		int min = (int)(base_price * 0.6);
-		jsonArray_3[3].put("" + (int)(min + Math.random() * (max - min + 1)));
+		int max = (int)(base_price * 1.2);
+		int min = (int)(base_price * 0.8);
+		strings[3] = "" + (int)(min + Math.random() * (max - min + 1));
 		
-		for(int i = 0;i < data_number;i++){
-			jsonArray_2[i].put(jsonArray_3[i]);
-			jsonArray_1.put(jsonArray_2[i]);
-		}
-		
-		json_string += jsonArray_1.toString() + "}";
-		return json_string;
+		return getJson_string(strings);
 	}
 	
 	private String getApartment_json(){
-		int data_number = 3;
+		final int DATA_NUMBER = 3;
 		
-		String json_string = "{\"c2array\":true,\"size\":[";
-		json_string += String.valueOf(data_number);
-		json_string += ",1,1],\"data\":";
+		String[] strings = new String[DATA_NUMBER];
 		
-		JSONArray jsonArray_1 = new JSONArray();
-		JSONArray[] jsonArray_2 = new JSONArray[data_number];
-		JSONArray[] jsonArray_3 = new JSONArray[data_number];
-		for(int i = 0;i < data_number;i++){
-			jsonArray_2[i] = new JSONArray();
-			jsonArray_3[i] = new JSONArray();
-		}
+		strings[0] = "" + main_controll.getApartment_controll().get_Apartment_data(Apartment_enum.small).getPrice();
+		strings[1] = "" + main_controll.getApartment_controll().get_Apartment_data(Apartment_enum.medium).getPrice();
+		strings[2] = "" + main_controll.getApartment_controll().get_Apartment_data(Apartment_enum.big).getPrice();
 		
-		jsonArray_3[0].put("" + main_controll.getApartment_controll().get_Apartment_data(Apartment_enum.small).getPrice());
-		jsonArray_3[1].put("" + main_controll.getApartment_controll().get_Apartment_data(Apartment_enum.medium).getPrice());
-		jsonArray_3[2].put("" + main_controll.getApartment_controll().get_Apartment_data(Apartment_enum.big).getPrice());
-		
-		for(int i = 0;i < data_number;i++){
-			jsonArray_2[i].put(jsonArray_3[i]);
-			jsonArray_1.put(jsonArray_2[i]);
-		}
-		
-		json_string += jsonArray_1.toString() + "}";
-		return json_string;
+		return getJson_string(strings);
 	}
 }

@@ -1,11 +1,15 @@
 package indi.zhuhai.sql.data;
 
+import java.util.Map;
+
+import indi.zhuhai.sql.Data_filedname;
+
 /**
  * @author zhuyst
  * 存储Event_money表中单行的数据
  */
 
-public class Event_money_data {
+public class Event_money_data extends Data_filedname{
 	private int ID;
 	private String message; //事件信息
 	private char fame_handle; //比较声誉的操作符
@@ -16,17 +20,20 @@ public class Event_money_data {
 	private char effect_handle; //影响的物品使用的操作符
 	private double effect_number; //影响的物品的数值
 	
-	public Event_money_data(int ID,String message,String fame_handle,int fame_number,
-			String health_handle,int health_number,int effect_ID,String effect_handle,double effect_number){
-		this.ID = ID;
-		this.message = message;
-		this.fame_handle = fame_handle.charAt(0);
-		this.fame_number = fame_number;
-		this.health_handle = health_handle.charAt(0);
-		this.health_number = health_number;
-		this.effect_ID = effect_ID;
-		this.effect_handle = effect_handle.charAt(0);
-		this.effect_number = effect_number;
+	public Event_money_data(){
+		
+	}
+	
+	public Event_money_data(Map<String, String> result){
+		this.ID = Integer.parseInt(result.get("ID"));
+		this.message = result.get("message");
+		this.fame_handle = result.get("fame_health").charAt(0);
+		this.fame_number = Integer.parseInt(result.get("fame_number"));
+		this.health_handle = result.get("health_handle").charAt(0);
+		this.health_number = Integer.parseInt(result.get("health_number"));
+		this.effect_ID = Integer.parseInt(result.get("effect_ID"));
+		this.effect_handle = result.get("effect_handle").charAt(0);
+		this.effect_number = Double.parseDouble(result.get("effect_number"));
 	}
 	
 	public char getEffect_handle() {

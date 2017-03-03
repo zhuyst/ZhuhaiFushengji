@@ -1,27 +1,35 @@
 package indi.zhuhai.sql.data;
 
+import java.util.Map;
+
+import indi.zhuhai.sql.Data_filedname;
+
 /**
  * @author zhuyst
  * 存放Event_item表中单行的数据
  */
 
-public class Event_item_data {
+public class Event_item_data extends Data_filedname{
 	private int ID;
 	private String message; //事件信息
 	private int[] effect_item_ID; //事件发生时影响的物品ID
 	private char effect_handle; //影响的操作符
 	private int effect_number; //影响的数值
 	
-	public Event_item_data(int ID,String message,String effect_item_ID_S,char effect_handle,int effect_number){
-		this.ID = ID;
-		this.message = message;
-		String[] effect_item_ID_SS = effect_item_ID_S.split("\\.");
-		effect_item_ID = new int[effect_item_ID_SS.length];
-		for(int i = 0;i < effect_item_ID_SS.length;i++){
-			this.effect_item_ID[i] = Integer.valueOf(effect_item_ID_SS[i]);
+	public Event_item_data(){
+		
+	}
+	
+	public Event_item_data(Map<String, String> result){
+		this.ID = Integer.parseInt(result.get("ID"));
+		this.message = result.get("message");
+		String[] effect_item_ID_S = result.get("effect_item_ID").split("\\.");
+		effect_item_ID = new int[effect_item_ID_S.length];
+		for(int i = 0;i < effect_item_ID_S.length;i++){
+			this.effect_item_ID[i] = Integer.valueOf(effect_item_ID_S[i]);
 		}
-		this.effect_handle = effect_handle;
-		this.effect_number = effect_number;
+		this.effect_handle = result.get("effect_handle").charAt(0);
+		this.effect_number = Integer.parseInt(result.get("effect_number"));
 	}
 	
 	public int getID() {

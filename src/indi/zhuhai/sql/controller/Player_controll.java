@@ -1,7 +1,7 @@
 package indi.zhuhai.sql.controller;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Map;
 
 import com.mysql.jdbc.PreparedStatement;
 
@@ -62,94 +62,51 @@ public class Player_controll{
 	
 	//验证密码是否正确
 	public boolean validate_password(String name,String password){
-		Boolean isright_password = true;
-		PreparedStatement pst;
-		ResultSet rs;
 		String sql = "select Name,Password from player where Name = '" + name + "' and Password = md5('" + password + "')";
-		try {
-			pst = (PreparedStatement) mysql.getConnection().prepareStatement(sql);
-			rs = pst.executeQuery();
-			rs.next();
-			rs.getString(1);
-			pst.close();
-			rs.close();
-		} catch (SQLException e) {
-			isright_password = false;
-		}
-		return isright_password;
+		Map<String, String> result = mysql.select(sql, new String[]{"Name"});
+		if(result == null) return false;
+		else return true;
 	}
 	
 	//验证用户名是否有重复
 	private boolean validate_duplicate_name(String name){
-		Boolean isduplicate_name = true;
-		PreparedStatement pst;
-		ResultSet rs;
 		String sql = "select Name from player where Name = '" + name + "'";
-		try {
-			pst = (PreparedStatement) mysql.getConnection().prepareStatement(sql);
-			rs = pst.executeQuery();
-			rs.next();
-			rs.getString(1);
-			pst.close();
-			rs.close();
-		} catch (SQLException e) {
-			isduplicate_name = false;
-		}
-		return isduplicate_name;
+		Map<String, String> result = mysql.select(sql, new String[]{"Name"});
+		if(result == null) return true;
+		else return false;
 	}
 	
 	//获取玩家的信息
 	public Player_data get_player_data(String name){
-		Player_data data = null;
-		PreparedStatement pst;
-		ResultSet rs;
+		Player_data data = new Player_data();
 		int item_number = global_controll.get_data(Global_enum.Item_number);
-		String sql = "select ID,Money,Deposit,Debt,Day,Fame,Health,Apartment_item_number,Apartment_item_max";
+		String sql = "select * from player where Name = '" + name + "'";
+		
+		String[] filedname = data.getFiledName();
+		int base_number = filedname.length - 1;
+		String[] params = new String[base_number + item_number];
+		
+		System.arraycopy(filedname, 0, params, 0, base_number);
 		for(int i = 1;i <= item_number;i++){
-			sql += ",Item_" + i;
+			params[base_number - 1 + i] = "Item_" + i;
 		}
-		sql += " from player where Name = '" + name + "'";
-		try {
-			pst = (PreparedStatement)mysql.getConnection().prepareStatement(sql);
-			rs = pst.executeQuery();
-			rs.next();
-			int ID = rs.getInt(1);
-			int money = rs.getInt(2);
-			int deposit = rs.getInt(3);
-			int debt = rs.getInt(4);
-			int day = rs.getInt(5);
-			int fame = rs.getInt(6);
-			int health = rs.getInt(7);
-			int apartment_item_number = rs.getInt(8);
-			int apartment_item_max = rs.getInt(9);
-			int[] item = new int[item_number];
-			for(int i = 0;i < item_number;i++){
-				item[i] = rs.getInt(i+10);
-			}
-			data = new Player_data(ID,name,money,deposit,debt,day,fame,health,apartment_item_number,
-					apartment_item_max,item,item_number);
-			pst.close();
-			rs.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		Map<String, String> result = mysql.select(sql, params);
+		data = new Player_data(result,item_number);
 		
 		return data;
 	}
 	
 	//更新玩家的信息
 	public void update_player_data(String name,Player_enum player_enum,String update_data){
-		PreparedStatement pst;
 		String sql = "update player set " + player_enum + "='" + update_data + "' where Name = '" + name + "'";
-		try {
-			pst = (PreparedStatement) mysql.getConnection().prepareStatement(sql);
-			pst.executeUpdate();
-			pst.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		mysql.update(sql);
+	}
+	
+	//更新物品数量
+	public void update_player_item(String name,int item_ID,int number){
+		String sql = "update player set Item_" + item_ID + "='" + number + "' where Name = '" + name + "'";
+		mysql.update(sql);
 	}
 	
 	//购买物品
@@ -176,7 +133,6 @@ public class Player_controll{
 		this.update_player_item(name, item_ID, item_number - sell_number);
 		this.update_player_data(name, Player_enum.Apartment_item_number, String.valueOf(apartment_item_number - sell_number));
 		
-		
 		Item_data item_data = item_controll.get_Item_data(item_ID);
 		char effect_handle = item_data.getEffect_handle();
 		int effect_number =item_data.getEffect_number();
@@ -186,20 +142,6 @@ public class Player_controll{
 		}
 		else if(effect_handle == '-'){
 			this.update_player_data(name, Player_enum.Fame, String.valueOf(player_fame - effect_number * sell_number));
-		}
-	}
-	
-	//更新物品数量
-	public void update_player_item(String name,int item_ID,int number){
-		PreparedStatement pst;
-		String sql = "update player set Item_" + item_ID + "='" + number + "' where Name = '" + name + "'";
-		try {
-			pst = (PreparedStatement) mysql.getConnection().prepareStatement(sql);
-			pst.executeUpdate();
-			pst.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 	
@@ -263,7 +205,6 @@ public class Player_controll{
 	
 	//重新开始
 	public void restart(String name){
-		PreparedStatement pst;
 		String sql = "update player set Money=3000,Deposit=0,Debt=5000,Day=0,Fame=100,Health=100,Apartment_item_number=0,"
 				+ "Apartment_item_max=100";
 		int item_number = global_controll.get_data(Global_enum.Item_number);
@@ -271,13 +212,6 @@ public class Player_controll{
 			sql += ",Item_" + i + "=0";
 		}
 		sql += " where Name = '" + name + "'";
-		try {
-			pst = (PreparedStatement) mysql.getConnection().prepareStatement(sql);
-			pst.executeUpdate();
-			pst.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		mysql.update(sql);
 	}
 }

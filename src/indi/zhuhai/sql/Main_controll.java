@@ -1,6 +1,14 @@
-package indi.zhuhai.sql.controller;
+package indi.zhuhai.sql;
 
-import indi.zhuhai.sql.JDBC;
+import indi.zhuhai.sql.controller.Apartment_controll;
+import indi.zhuhai.sql.controller.Event_health_controll;
+import indi.zhuhai.sql.controller.Event_item_controll;
+import indi.zhuhai.sql.controller.Event_money_controll;
+import indi.zhuhai.sql.controller.Global_controll;
+import indi.zhuhai.sql.controller.Item_controll;
+import indi.zhuhai.sql.controller.Pill_controll;
+import indi.zhuhai.sql.controller.Player_controll;
+import indi.zhuhai.sql.controller.Ranking_list_controll;
 import indi.zhuhai.sql.data.Player_data;
 import indi.zhuhai.sql.dataenum.Global_enum;
 import indi.zhuhai.sql.dataenum.Player_enum;
@@ -46,12 +54,20 @@ public class Main_controll {
 		int event_type = (int)(1+Math.random()*100);
 		
 		if(event_type >= 1 && event_type <= player_data.getFame()){  //触发意外得财/失财事件
-			Boolean is_active = false;
+			Boolean can_active = false;
 			int number = 0;
+
 			int event_number = this.global_controll.get_data(Global_enum.Event_money_number);
-			while(!is_active){
+			for(int i = 1;!can_active;i++){
 				number = (int)(1 + Math.random() * event_number);
-				is_active = this.event_money_controll.active(player_name, number);
+				can_active = this.event_money_controll.check(player_name, number);
+				if(can_active && i <= event_number){
+					this.event_money_controll.active(player_name, number);
+				}
+				else {
+					this.event_money_controll.active(player_name, number);
+					break;
+				}
 			}
 			event_message = this.event_money_controll.get_event_money_data(number).getMessage();
 		}
