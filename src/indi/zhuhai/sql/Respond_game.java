@@ -91,23 +91,11 @@ public class Respond_game {
 			//Íæ¼Ò³ÔÏÂÒ©Íè£¬»Ö¸´ÉúÃüÖµ
 			else if(tag.equals("eatpill")){
 				String name = message.split("\\|")[0];
-				char pill_type = message.split("\\|")[1].charAt(0);
+				String pill_type = message.split("\\|")[1];
 				
 				Player_controll player_controll = main_controll.getPlayer_controll();
-				switch (pill_type) {
-				case 'F':
-					player_controll.eat_pill(name, Pill_enum.F);
-					break;
-				case 'W':
-					player_controll.eat_pill(name, Pill_enum.W);
-					break;
-				case 'R':
-					player_controll.eat_pill(name, Pill_enum.R);
-					break;
-				case 'J':
-					player_controll.eat_pill(name, Pill_enum.J);
-					break;
-				}
+				Pill_enum pill_enum = Pill_enum.valueOf(pill_type);
+				player_controll.eat_pill(name, pill_enum);
 				
 				respond = "1";
 			}
@@ -193,15 +181,8 @@ public class Respond_game {
 				String type = message.split("\\|")[1];
 				
 				Player_controll player_controll = main_controll.getPlayer_controll();
-				if(type.equals(Apartment_enum.small.toString())){
-					player_controll.buy_apartment(name, Apartment_enum.small);
-				}
-				else if(type.equals(Apartment_enum.medium.toString())){
-					player_controll.buy_apartment(name, Apartment_enum.medium);
-				}
-				else if(type.equals(Apartment_enum.big.toString())){
-					player_controll.buy_apartment(name, Apartment_enum.big);
-				}
+				Apartment_enum apartment_enum = Apartment_enum.valueOf(type);
+				player_controll.buy_apartment(name, apartment_enum);
 				
 				respond = "1";
 			}
