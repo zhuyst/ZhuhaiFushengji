@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="indi.zhuhai.dao.Event_moneyDao">
+  <resultMap id="BaseResultMap" type="indi.zhuhai.pojo.Event_money">
+    <id column="ID" jdbcType="INTEGER" property="id" />
+    <result column="Message" jdbcType="VARCHAR" property="message" />
+    <result column="Fame_handle" jdbcType="VARCHAR" property="fameHandle" />
+    <result column="Fame_number" jdbcType="INTEGER" property="fameNumber" />
+    <result column="Health_handle" jdbcType="VARCHAR" property="healthHandle" />
+    <result column="Health_number" jdbcType="INTEGER" property="healthNumber" />
+    <result column="Effect_ID" jdbcType="INTEGER" property="effectId" />
+    <result column="Effect_handle" jdbcType="VARCHAR" property="effectHandle" />
+    <result column="Effect_number" jdbcType="DOUBLE" property="effectNumber" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, Message, Fame_handle, Fame_number, Health_handle, Health_number, Effect_ID, Effect_handle, 
+    Effect_number
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from event_money
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from event_money
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="indi.zhuhai.pojo.Event_money">
+    insert into event_money (ID, Message, Fame_handle, 
+      Fame_number, Health_handle, Health_number, 
+      Effect_ID, Effect_handle, Effect_number
+      )
+    values (#{id,jdbcType=INTEGER}, #{message,jdbcType=VARCHAR}, #{fameHandle,jdbcType=VARCHAR}, 
+      #{fameNumber,jdbcType=INTEGER}, #{healthHandle,jdbcType=VARCHAR}, #{healthNumber,jdbcType=INTEGER}, 
+      #{effectId,jdbcType=INTEGER}, #{effectHandle,jdbcType=VARCHAR}, #{effectNumber,jdbcType=DOUBLE}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="indi.zhuhai.pojo.Event_money">
+    insert into event_money
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="message != null">
+        Message,
+      </if>
+      <if test="fameHandle != null">
+        Fame_handle,
+      </if>
+      <if test="fameNumber != null">
+        Fame_number,
+      </if>
+      <if test="healthHandle != null">
+        Health_handle,
+      </if>
+      <if test="healthNumber != null">
+        Health_number,
+      </if>
+      <if test="effectId != null">
+        Effect_ID,
+      </if>
+      <if test="effectHandle != null">
+        Effect_handle,
+      </if>
+      <if test="effectNumber != null">
+        Effect_number,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="message != null">
+        #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="fameHandle != null">
+        #{fameHandle,jdbcType=VARCHAR},
+      </if>
+      <if test="fameNumber != null">
+        #{fameNumber,jdbcType=INTEGER},
+      </if>
+      <if test="healthHandle != null">
+        #{healthHandle,jdbcType=VARCHAR},
+      </if>
+      <if test="healthNumber != null">
+        #{healthNumber,jdbcType=INTEGER},
+      </if>
+      <if test="effectId != null">
+        #{effectId,jdbcType=INTEGER},
+      </if>
+      <if test="effectHandle != null">
+        #{effectHandle,jdbcType=VARCHAR},
+      </if>
+      <if test="effectNumber != null">
+        #{effectNumber,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="indi.zhuhai.pojo.Event_money">
+    update event_money
+    <set>
+      <if test="message != null">
+        Message = #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="fameHandle != null">
+        Fame_handle = #{fameHandle,jdbcType=VARCHAR},
+      </if>
+      <if test="fameNumber != null">
+        Fame_number = #{fameNumber,jdbcType=INTEGER},
+      </if>
+      <if test="healthHandle != null">
+        Health_handle = #{healthHandle,jdbcType=VARCHAR},
+      </if>
+      <if test="healthNumber != null">
+        Health_number = #{healthNumber,jdbcType=INTEGER},
+      </if>
+      <if test="effectId != null">
+        Effect_ID = #{effectId,jdbcType=INTEGER},
+      </if>
+      <if test="effectHandle != null">
+        Effect_handle = #{effectHandle,jdbcType=VARCHAR},
+      </if>
+      <if test="effectNumber != null">
+        Effect_number = #{effectNumber,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="indi.zhuhai.pojo.Event_money">
+    update event_money
+    set Message = #{message,jdbcType=VARCHAR},
+      Fame_handle = #{fameHandle,jdbcType=VARCHAR},
+      Fame_number = #{fameNumber,jdbcType=INTEGER},
+      Health_handle = #{healthHandle,jdbcType=VARCHAR},
+      Health_number = #{healthNumber,jdbcType=INTEGER},
+      Effect_ID = #{effectId,jdbcType=INTEGER},
+      Effect_handle = #{effectHandle,jdbcType=VARCHAR},
+      Effect_number = #{effectNumber,jdbcType=DOUBLE}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="indi.zhuhai.dao.Ranking_listDao">
+  <resultMap id="BaseResultMap" type="indi.zhuhai.pojo.Ranking_list">
+    <id column="ID" jdbcType="INTEGER" property="id" />
+    <result column="Name" jdbcType="VARCHAR" property="name" />
+    <result column="Point" jdbcType="INTEGER" property="point" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, Name, Point
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ranking_list
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectDescList" resultMap="BaseResultMap">
+    select * from ranking_list 
+    order by Point desc limit 10;
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ranking_list
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="indi.zhuhai.pojo.Ranking_list">
+    insert into ranking_list (ID, Name, Point
+      )
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{point,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="indi.zhuhai.pojo.Ranking_list">
+    insert into ranking_list
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="name != null">
+        Name,
+      </if>
+      <if test="point != null">
+        Point,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="point != null">
+        #{point,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="indi.zhuhai.pojo.Ranking_list">
+    update ranking_list
+    <set>
+      <if test="name != null">
+        Name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="point != null">
+        Point = #{point,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="indi.zhuhai.pojo.Ranking_list">
+    update ranking_list
+    set Name = #{name,jdbcType=VARCHAR},
+      Point = #{point,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

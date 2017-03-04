@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="indi.zhuhai.dao.Event_healthDao">
+  <resultMap id="BaseResultMap" type="indi.zhuhai.pojo.Event_health">
+    <id column="ID" jdbcType="INTEGER" property="id" />
+    <result column="Message" jdbcType="VARCHAR" property="message" />
+    <result column="Effect_number" jdbcType="INTEGER" property="effectNumber" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, Message, Effect_number
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from event_health
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from event_health
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="indi.zhuhai.pojo.Event_health">
+    insert into event_health (ID, Message, Effect_number
+      )
+    values (#{id,jdbcType=INTEGER}, #{message,jdbcType=VARCHAR}, #{effectNumber,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="indi.zhuhai.pojo.Event_health">
+    insert into event_health
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="message != null">
+        Message,
+      </if>
+      <if test="effectNumber != null">
+        Effect_number,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="message != null">
+        #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="effectNumber != null">
+        #{effectNumber,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="indi.zhuhai.pojo.Event_health">
+    update event_health
+    <set>
+      <if test="message != null">
+        Message = #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="effectNumber != null">
+        Effect_number = #{effectNumber,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="indi.zhuhai.pojo.Event_health">
+    update event_health
+    set Message = #{message,jdbcType=VARCHAR},
+      Effect_number = #{effectNumber,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

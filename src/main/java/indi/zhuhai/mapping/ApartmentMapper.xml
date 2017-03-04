@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="indi.zhuhai.dao.ApartmentDao">
+  <resultMap id="BaseResultMap" type="indi.zhuhai.pojo.Apartment">
+    <id column="Type" jdbcType="VARCHAR" property="type" />
+    <result column="Spec" jdbcType="INTEGER" property="spec" />
+    <result column="Price" jdbcType="INTEGER" property="price" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    Type, Spec, Price
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from apartment
+    where Type = #{type,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from apartment
+    where Type = #{type,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="indi.zhuhai.pojo.Apartment">
+    insert into apartment (Type, Spec, Price
+      )
+    values (#{type,jdbcType=VARCHAR}, #{spec,jdbcType=INTEGER}, #{price,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="indi.zhuhai.pojo.Apartment">
+    insert into apartment
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="type != null">
+        Type,
+      </if>
+      <if test="spec != null">
+        Spec,
+      </if>
+      <if test="price != null">
+        Price,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="spec != null">
+        #{spec,jdbcType=INTEGER},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="indi.zhuhai.pojo.Apartment">
+    update apartment
+    <set>
+      <if test="spec != null">
+        Spec = #{spec,jdbcType=INTEGER},
+      </if>
+      <if test="price != null">
+        Price = #{price,jdbcType=INTEGER},
+      </if>
+    </set>
+    where Type = #{type,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="indi.zhuhai.pojo.Apartment">
+    update apartment
+    set Spec = #{spec,jdbcType=INTEGER},
+      Price = #{price,jdbcType=INTEGER}
+    where Type = #{type,jdbcType=VARCHAR}
+  </update>
+</mapper>
