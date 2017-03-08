@@ -1,7 +1,6 @@
 package indi.zhuhai.service.impl;
 
-import javax.annotation.Resource;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import indi.zhuhai.dao.Event_healthDao;
@@ -12,9 +11,9 @@ import indi.zhuhai.service.PlayerService;
 
 @Service("event_healthService")
 public class Event_healthServiceImpl implements Event_healthService{
-	@Resource
+	@Autowired
 	private Event_healthDao event_healthDao;
-	@Resource
+	@Autowired
 	private PlayerService playerService;
 	
 	@Override

@@ -1,21 +1,23 @@
 package indi.zhuhai.service.impl;
 
-import javax.annotation.Resource;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import indi.zhuhai.dao.Event_moneyDao;
 import indi.zhuhai.pojo.Event_money;
 import indi.zhuhai.pojo.Player;
 import indi.zhuhai.service.Event_moneyService;
+import indi.zhuhai.service.PlayerItemService;
 import indi.zhuhai.service.PlayerService;
 
 @Service("event_moneyService")
 public class Event_moneyServiceImpl implements Event_moneyService{
-	@Resource
+	@Autowired
 	private Event_moneyDao event_moneyDao;
-	@Resource
+	@Autowired
 	private PlayerService playerService;
+	@Autowired
+	private PlayerItemService playerItemService;
 	
 	@Override
 	public Event_money getEvent_moneyByID(int ID) {
@@ -60,12 +62,12 @@ public class Event_moneyServiceImpl implements Event_moneyService{
 		}
 		else {
 			if(event_money.getEffectHandle().charAt(0) == '+'){
-				player.setItem(effect_ID, event_money.getEffectNumber().intValue());
-				player.setApartmentItemNumber(player.getApartmentItemNumber() - event_money.getEffectNumber().intValue());
+				playerItemService.updateNumber(player.getId(), effect_ID, event_money.getEffectNumber().intValue());
+				player.setApartmentItemNumber(player.getApartmentItemNumber() + event_money.getEffectNumber().intValue());
 			}
 			else if(event_money.getEffectHandle().charAt(0) == '='){
-				player.setItem(effect_ID, event_money.getEffectNumber().intValue());
-				player.setApartmentItemNumber(player.getApartmentItemNumber() - player.getItem(effect_ID));
+				playerItemService.updateNumber(player.getId(), effect_ID, event_money.getEffectNumber().intValue());
+				player.setApartmentItemNumber(player.getApartmentItemNumber() - playerItemService.getItemNumber(player.getId(), effect_ID));
 			}
 		}
 		this.playerService.setPlayer(player);

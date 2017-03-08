@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="indi.zhuhai.dao.PlayerItemDao">
+  <resultMap id="BaseResultMap" type="indi.zhuhai.pojo.PlayerItem">
+    <result column="Player_ID" jdbcType="INTEGER" property="playerId" />
+    <result column="Item_ID" jdbcType="INTEGER" property="itemId" />
+    <result column="Number" jdbcType="INTEGER" property="number" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    player_id,item_id,number
+  </sql>
+  <insert id="insert" parameterType="indi.zhuhai.pojo.PlayerItem">
+    insert into playeritem (Player_ID, Item_ID, Number
+      )
+    values (#{playerId,jdbcType=INTEGER}, #{itemId,jdbcType=INTEGER}, #{number,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="indi.zhuhai.pojo.PlayerItem">
+    insert into playeritem
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="playerId != null">
+        Player_ID,
+      </if>
+      <if test="itemId != null">
+        Item_ID,
+      </if>
+      <if test="number != null">
+        Number,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="playerId != null">
+        #{playerId,jdbcType=INTEGER},
+      </if>
+      <if test="itemId != null">
+        #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="number != null">
+        #{number,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="selectOneItem" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from playeritem
+    where player_id = #{playerid,jdbcType=INTEGER} and item_id = #{itemid,jdbcType=INTEGER}
+  </select>
+  <select id="selectAllItem" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from playeritem
+    where player_id = #{playerId,jdbcType=VARCHAR}
+  </select>
+  <update id="updateByPrimaryKey" parameterType="indi.zhuhai.pojo.PlayerItem">
+    update playeritem
+    set Number = #{number,jdbcType=INTEGER}
+    where player_id = #{playerId,jdbcType=INTEGER}
+    and item_id = #{itemId,jdbcType=INTEGER}
+  </update>
+</mapper>

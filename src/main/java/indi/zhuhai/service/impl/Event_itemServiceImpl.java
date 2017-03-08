@@ -1,7 +1,6 @@
 package indi.zhuhai.service.impl;
 
-import javax.annotation.Resource;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import indi.zhuhai.dao.Event_itemDao;
@@ -11,9 +10,9 @@ import indi.zhuhai.service.ItemService;
 
 @Service("event_itemService")
 public class Event_itemServiceImpl implements Event_itemService{
-	@Resource
+	@Autowired
 	private Event_itemDao event_itemDao;
-	@Resource
+	@Autowired
 	private ItemService itemService;
 	
 	@Override

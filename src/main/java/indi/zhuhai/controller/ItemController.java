@@ -1,8 +1,9 @@
 package indi.zhuhai.controller;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,13 +16,13 @@ import indi.zhuhai.service.ItemService;
 @Controller
 @RequestMapping("/item")
 public class ItemController extends C2_JSON{
-	@Resource
+	@Autowired
 	private ItemService itemService;
-	@Resource
+	@Autowired
 	private GlobalService globalService;
 	
 	@RequestMapping(path = "/getlist", method = RequestMethod.POST)
-	public String getItemList(HttpServletRequest request){
+	public void getItemList(HttpServletRequest request,HttpServletResponse response){
 		final int DATA_NUMBER = 6;
 		final int MAX = globalService.getNumberByVariable(Global_enum.Item_number);
 		final int MIN = 1;
@@ -33,11 +34,11 @@ public class ItemController extends C2_JSON{
 			strings[i] = "" + randomnumber[i];
 		}
 		
-		return getJson_string(strings);
+		getResponse(response, getJson_string(strings));
 	}
 	
 	@RequestMapping(path = "/getdata", method = RequestMethod.POST)
-	public String getItemData(HttpServletRequest request){
+	public void getItemData(HttpServletRequest request,HttpServletResponse response){
 		int item_ID = Integer.parseInt(request.getParameter("itemID"));
 		final int DATA_NUMBER = 4;
 		Item item = itemService.getItemByID(item_ID);
@@ -53,7 +54,7 @@ public class ItemController extends C2_JSON{
 		int min = (int)(base_price * 0.8);
 		strings[3] = "" + (int)(min + Math.random() * (max - min + 1));
 		
-		return getJson_string(strings);
+		getResponse(response, getJson_string(strings));
 	}
 	
 	private int[] getRandonNumber(int max,int min,int n){

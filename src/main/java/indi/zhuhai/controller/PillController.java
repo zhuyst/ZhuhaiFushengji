@@ -1,8 +1,9 @@
 package indi.zhuhai.controller;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,11 +15,11 @@ import indi.zhuhai.service.PillService;
 @Controller
 @RequestMapping("/pill")
 public class PillController extends C2_JSON{
-	@Resource
+	@Autowired
 	private PillService pillService;
 	
 	@RequestMapping(path = "/getdata", method = RequestMethod.POST)
-	public String getPillData(HttpServletRequest request){
+	public void getPillData(HttpServletRequest request,HttpServletResponse response){
 		final int DATA_NUMBER = 8;
 		final int PILL_NUMBER = 4;
 		
@@ -38,6 +39,6 @@ public class PillController extends C2_JSON{
 			strings[i + PILL_NUMBER] = "" + pill[i].getHealth();
 		}
 		
-		return getJson_string(strings);
+		getResponse(response, getJson_string(strings));
 	}
 }

@@ -1,5 +1,10 @@
 package indi.zhuhai.controller;
 
+import java.io.IOException;
+import java.io.OutputStream;
+
+import javax.servlet.http.HttpServletResponse;
+
 import com.alibaba.fastjson.JSONArray;
 
 public abstract class C2_JSON {
@@ -25,5 +30,21 @@ public abstract class C2_JSON {
 		json_string += jsonArray_1.toString() + "}";
 		
 		return json_string;
+	}
+	
+	protected void getResponse(HttpServletResponse response,String data){
+		OutputStream ous;
+		try {
+			ous = response.getOutputStream();
+			response.setHeader("Content-Type", "text/html;charset=UTF-8");
+			response.setHeader("Access-Control-Allow-Origin", "*");
+			byte[] dataByteArr = data.getBytes("UTF-8");
+			ous.write(dataByteArr);
+			ous.flush();
+			ous.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

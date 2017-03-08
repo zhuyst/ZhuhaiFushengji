@@ -1,7 +1,6 @@
 package indi.zhuhai.service.impl;
 
-import javax.annotation.Resource;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import indi.zhuhai.dao.ApartmentDao;
@@ -11,7 +10,7 @@ import indi.zhuhai.service.ApartmentService;
 
 @Service("apartmentService")
 public class ApartmentServiceImpl implements ApartmentService{
-	@Resource
+	@Autowired
 	private ApartmentDao apartmentDao;
 	
 	@Override

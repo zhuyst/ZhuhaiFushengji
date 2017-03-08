@@ -1,7 +1,6 @@
 package indi.zhuhai.service.impl;
 
-import javax.annotation.Resource;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import indi.zhuhai.dao.GlobalDao;
@@ -11,7 +10,7 @@ import indi.zhuhai.service.GlobalService;
 
 @Service("globalService")
 public class GlobalServiceImpl implements GlobalService{
-	@Resource
+	@Autowired
 	private GlobalDao globalDao;
 
 	@Override

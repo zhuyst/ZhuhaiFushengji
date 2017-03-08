@@ -1,5 +1,7 @@
 package indi.zhuhai.dao;
 
+import org.apache.ibatis.annotations.Param;
+
 import indi.zhuhai.pojo.Player;
 
 public interface PlayerDao {
@@ -15,5 +17,5 @@ public interface PlayerDao {
 
     int updateByPrimaryKey(Player record);
     
-    Player validatePassword(String name);
+    Player validatePassword(@Param("name")String name,@Param("password")String password);
 }

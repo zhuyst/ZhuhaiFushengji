@@ -1,7 +1,6 @@
 package indi.zhuhai.service.impl;
 
-import javax.annotation.Resource;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import indi.zhuhai.dao.ItemDao;
@@ -10,7 +9,7 @@ import indi.zhuhai.service.ItemService;
 
 @Service("itemService")
 public class ItemServiceImpl implements ItemService{
-	@Resource
+	@Autowired
 	private ItemDao itemDao;
 
 	@Override

@@ -1,7 +1,6 @@
 package indi.zhuhai.service.impl;
 
-import javax.annotation.Resource;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import indi.zhuhai.dao.PlayerDao;
@@ -9,6 +8,7 @@ import indi.zhuhai.pojo.Apartment;
 import indi.zhuhai.pojo.Item;
 import indi.zhuhai.pojo.Pill;
 import indi.zhuhai.pojo.Player;
+import indi.zhuhai.pojo.PlayerItem;
 import indi.zhuhai.pojoenum.Apartment_enum;
 import indi.zhuhai.pojoenum.Global_enum;
 import indi.zhuhai.pojoenum.Pill_enum;
@@ -16,19 +16,22 @@ import indi.zhuhai.service.ApartmentService;
 import indi.zhuhai.service.GlobalService;
 import indi.zhuhai.service.ItemService;
 import indi.zhuhai.service.PillService;
+import indi.zhuhai.service.PlayerItemService;
 import indi.zhuhai.service.PlayerService;
 
 @Service("playerService")
 public class PlayerServiceImpl implements PlayerService{
-	@Resource
+	@Autowired
 	private PlayerDao playerDao;
-	@Resource
+	@Autowired
+	private PlayerItemService playerItemService;
+	@Autowired
 	private GlobalService globalService;
-	@Resource
+	@Autowired
 	private ItemService itemService;
-	@Resource
+	@Autowired
 	private ApartmentService apartmentService;
-	@Resource
+	@Autowired
 	private PillService pillService;
 
 	@Override
@@ -50,8 +53,14 @@ public class PlayerServiceImpl implements PlayerService{
 			
 			int newID = globalService.getNumberByVariable(Global_enum.Player_number) + 1;
 			player.setId(newID);
-			
 			this.playerDao.insertSelective(player);
+			globalService.setNumberByVariable(Global_enum.Player_number, newID);
+			
+			int item_number = globalService.getNumberByVariable(Global_enum.Item_number);
+			for(int i = 1;i <= item_number;i++){
+				playerItemService.insertNewItem(newID, i);
+			}
+			
 			return true;
 		}
 		else return false;
@@ -59,7 +68,7 @@ public class PlayerServiceImpl implements PlayerService{
 
 	@Override
 	public boolean validatePassword(String username, String password) {
-		Player player = this.getPlayerByName(username);
+		Player player = playerDao.validatePassword(username, password);
 		if(player == null) return false;
 		else return true;
 	}
@@ -74,7 +83,10 @@ public class PlayerServiceImpl implements PlayerService{
 	@Override
 	public void buyItem(String name, int item_ID, int buy_number, int item_price) {
 		Player player = this.getPlayerByName(name);
-		player.setItem(item_ID, player.getItem(item_ID) + buy_number);
+		PlayerItem playerItem = playerItemService.getPlayerItem(player.getId(), item_ID);
+		
+		playerItemService.updateNumber(player.getId(), item_ID, playerItem.getNumber() + buy_number);
+		
 		player.setMoney(player.getMoney() - item_price * buy_number);
 		player.setApartmentItemNumber(player.getApartmentItemNumber() + buy_number);
 		playerDao.updateByPrimaryKeySelective(player);
@@ -83,7 +95,9 @@ public class PlayerServiceImpl implements PlayerService{
 	@Override
 	public void sellItem(String name, int item_ID, int sell_number, int item_price) {
 		Player player = this.getPlayerByName(name);
-		player.setItem(item_ID, player.getItem(item_ID) - sell_number);
+		PlayerItem playerItem = playerItemService.getPlayerItem(player.getId(), item_ID);
+		
+		playerItemService.updateNumber(player.getId(), item_ID, playerItem.getNumber() - sell_number);
 		player.setMoney(player.getMoney() + item_price * sell_number);
 		player.setApartmentItemNumber(player.getApartmentItemNumber() - sell_number);
 		
@@ -154,7 +168,7 @@ public class PlayerServiceImpl implements PlayerService{
 		player.setApartmentItemNumber(0);
 		player.setApartmentItemMax(100);
 		for(int i = 1;i <= globalService.getNumberByVariable(Global_enum.Item_number);i++){
-			player.setItem(i, 0);
+			playerItemService.updateNumber(player.getId(), i, 0);
 		}
 		this.playerDao.updateByPrimaryKey(player);
 	}

@@ -10,20 +10,20 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.alibaba.fastjson.JSON;
 
-import indi.zhuhai.pojo.Player;
-import indi.zhuhai.service.PlayerService;
+import indi.zhuhai.service.PlayerItemService;
 
 @RunWith(SpringJUnit4ClassRunner.class)		//表示继承了SpringJUnit4ClassRunner类
-@ContextConfiguration(locations = {"classpath:spring-mybatis.xml"})
+@ContextConfiguration(locations = {"classpath*:spring-mybatis.xml"})
 
 public class TestMyBatis {
 	private static Logger logger = Logger.getLogger(TestMyBatis.class);
 	@Resource
-	private PlayerService playerService = null;
+	private PlayerItemService playerItemService;
 
 	@Test
 	public void test1() {
-		Player player = playerService.getPlayerByName("zhuyst");
-		logger.info(JSON.toJSONString(player));
+		for(int i=0;i<13;i++){
+			logger.info(JSON.toJSONString(playerItemService.getItemNumber(6, i+1)));
+		}
 	}
 }

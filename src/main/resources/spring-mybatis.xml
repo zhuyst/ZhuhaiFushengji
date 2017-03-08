@@ -58,18 +58,20 @@
         <property name="dataSource" ref="dataSource" />
     </bean>
     
-    <!-- Timer -->
-    <bean id="Event_itemTask" class="indi.zhuhai.task.Event_itemTask"></bean>
-    <bean id="scheduleEvent_itemTask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
-    	<property name="delay" value="3000"></property>           <!--第一次延迟3秒的时间-->
-		<property name="period" value="600000"></property>          <!--每隔1分钟的时间执行一次-->
-		<property name="timerTask" ref="Event_itemTask"></property>   <!--制定触发的类-->
-    </bean> 
-    <bean id="timerFactory" class="org.springframework.scheduling.timer.TimerFactoryBean">
-		<property name="scheduledTimerTasks">
-		<list>
-		<ref bean="scheduleEvent_itemTask"/>
-		</list>
-		</property>
+    <!-- Quartz Timer -->
+    <bean id="JobFactory" class="indi.zhuhai.quartz.JobFactory"></bean>
+    <bean name="Event_item_JobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">  
+    	<property name="jobClass" value="indi.zhuhai.quartz.Event_itemJob" />
+    	<property name="durability" value="true" />  
+	</bean>  
+	<bean id="Event_item_Trigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+		<property name="jobDetail" ref="Event_item_JobDetail" />
+		<property name="startDelay" value="1000" />
+		<property name="repeatInterval" value="60000" />
+	</bean>
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="jobFactory" ref="JobFactory"></property>
+		<property name="jobDetails" ref="Event_item_JobDetail"></property>
+		<property name="triggers" ref="Event_item_Trigger" ></property>
 	</bean>
 </beans>

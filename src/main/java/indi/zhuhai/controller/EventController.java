@@ -1,8 +1,9 @@
 package indi.zhuhai.controller;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,26 +18,28 @@ import indi.zhuhai.service.PlayerService;
 
 @Controller
 @RequestMapping("/event")
-public class EventController {
-	@Resource
+public class EventController extends C2_JSON{
+	@Autowired
 	private PlayerService playerService;
-	@Resource
+	@Autowired
 	private Event_moneyService event_moneyService;
-	@Resource
+	@Autowired
 	private Event_healthService event_healthService;
-	@Resource
+	@Autowired
 	private Event_itemService event_itemService;
-	@Resource
+	@Autowired
 	private GlobalService globalService;
 	
 	@RequestMapping(path = "/getdailymessage", method = RequestMethod.POST)
-	public String dailyEvent(String username){
+	public void dailyEvent(HttpServletRequest request,HttpServletResponse response){
+		String username = request.getParameter("name");
 		String event_message = null;
 		Player player = playerService.getPlayerByName(username);
 		
 		player.setDay(player.getDay() + 1);
 		player.setDebt((int)(player.getDebt() * 1.1));
 		player.setDeposit((int)(player.getDeposit() * 1.1));
+		playerService.setPlayer(player);
 		
 		int event_type = (int)(1+Math.random()*100);
 		
@@ -66,12 +69,12 @@ public class EventController {
 			event_message = event_healthService.getEvent_healthByID(number).getMessage();
 		}
 		
-		return event_message;
+		getResponse(response, event_message);
 	}
 	
 	@RequestMapping(path = "/getitemmessage", method = RequestMethod.POST)
-	public String getEvent_itemMessage(HttpServletRequest request){
+	public void getEvent_itemMessage(HttpServletRequest request,HttpServletResponse response){
 		int active_number = globalService.getNumberByVariable(Global_enum.Event_item_active_ID);
-		return event_itemService.getEvent_itemByID(active_number).getMessage();
+		getResponse(response, event_itemService.getEvent_itemByID(active_number).getMessage());
 	}
 }

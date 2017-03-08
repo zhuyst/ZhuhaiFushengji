@@ -2,8 +2,7 @@ package indi.zhuhai.service.impl;
 
 import java.util.List;
 
-import javax.annotation.Resource;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import indi.zhuhai.dao.Ranking_listDao;
@@ -15,9 +14,9 @@ import indi.zhuhai.service.Ranking_listService;
 
 @Service("ranking_listService")
 public class Ranking_listServiceImpl implements Ranking_listService{
-	@Resource
+	@Autowired
 	private Ranking_listDao ranking_listDao;
-	@Resource
+	@Autowired
 	private GlobalService globalService;
 	
 	@Override
@@ -29,7 +28,7 @@ public class Ranking_listServiceImpl implements Ranking_listService{
 		else list_number = winner_number;
 		Ranking_list[] data = new Ranking_list[list_number];
 		List<Ranking_list> list = ranking_listDao.selectDescList();
-		for(int i = 0;i < LIST_NUMBER_MAX;i++){
+		for(int i = 0;i < list_number;i++){
 			data[i] = list.get(i);
 		}
 		return data;
@@ -47,5 +46,7 @@ public class Ranking_listServiceImpl implements Ranking_listService{
 		record.setName(player.getName());
 		record.setPoint(point);
 		ranking_listDao.insert(record);
+		
+		globalService.setNumberByVariable(Global_enum.Winner_number, new_ID);
 	}
 }

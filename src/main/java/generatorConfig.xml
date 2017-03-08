@@ -8,10 +8,10 @@
       <property name="suppressDate" value="true" />
     </commentGenerator>
     <jdbcConnection connectionURL="jdbc:mysql://localhost:3306/game" driverClass="com.mysql.jdbc.Driver" password="zhuyst" userId="game_admin" />
-    <javaModelGenerator targetPackage="indi.zhuhai.pojo" targetProject="zhuhai_ssm/src/main/java" />
-    <sqlMapGenerator targetPackage="indi.zhuhai.mapping" targetProject="zhuhai_ssm/src/main/java" />
-    <javaClientGenerator targetPackage="indi.zhuhai.dao" targetProject="zhuhai_ssm/src/main/java" type="XMLMAPPER" />
-    <table tableName="apartment" domainObjectName="Apartment"
+    <javaModelGenerator targetPackage="indi.zhuhai.pojo" targetProject="Zhuhai_SSM/src/main/java" />
+    <sqlMapGenerator targetPackage="indi.zhuhai.mapping" targetProject="Zhuhai_SSM/src/main/java" />
+    <javaClientGenerator targetPackage="indi.zhuhai.dao" targetProject="Zhuhai_SSM/src/main/java" type="XMLMAPPER" />
+    <table tableName="player" domainObjectName="Player"
       enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
       enableSelectByExample="false" selectByExampleQueryId="false" >
     </table>

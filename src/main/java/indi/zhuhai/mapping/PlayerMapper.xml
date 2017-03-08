@@ -13,24 +13,10 @@
     <result column="health" jdbcType="INTEGER" property="health" />
     <result column="apartment_item_number" jdbcType="INTEGER" property="apartmentItemNumber" />
     <result column="apartment_item_max" jdbcType="INTEGER" property="apartmentItemMax" />
-    <result column="item_1" jdbcType="INTEGER" property="item1" />
-    <result column="item_2" jdbcType="INTEGER" property="item2" />
-    <result column="item_3" jdbcType="INTEGER" property="item3" />
-    <result column="item_4" jdbcType="INTEGER" property="item4" />
-    <result column="item_5" jdbcType="INTEGER" property="item5" />
-    <result column="item_6" jdbcType="INTEGER" property="item6" />
-    <result column="item_7" jdbcType="INTEGER" property="item7" />
-    <result column="item_8" jdbcType="INTEGER" property="item8" />
-    <result column="item_9" jdbcType="INTEGER" property="item9" />
-    <result column="item_10" jdbcType="INTEGER" property="item10" />
-    <result column="item_11" jdbcType="INTEGER" property="item11" />
-    <result column="item_12" jdbcType="INTEGER" property="item12" />
-    <result column="item_13" jdbcType="INTEGER" property="item13" />
   </resultMap>
   <sql id="Base_Column_List">
     name, ID, password, money, deposit, debt, day, fame, health, apartment_item_number, 
-    apartment_item_max, item_1, item_2, item_3, item_4, item_5, item_6, item_7, item_8, 
-    item_9, item_10, item_11, item_12, item_13
+    apartment_item_max
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -38,35 +24,25 @@
     from player
     where name = #{name,jdbcType=VARCHAR}
   </select>
-   <select id="validatePassword" parameterType="java.lang.String" resultMap="BaseResultMap">
+  <select id="validatePassword" resultMap="BaseResultMap">
     select 
-    name
+    <include refid="Base_Column_List" />
     from player
-    where name = #{name,jdbcType=VARCHAR} and password = Md5(#{password,jdbcType=VARCHAR})
+    where name = #{name,jdbcType=VARCHAR} and password = #{password,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from player
-    where name = #{name,jdbcType=VARCHAR} 
+    where name = #{name,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="indi.zhuhai.pojo.Player">
     insert into player (name, ID, password, 
       money, deposit, debt, 
       day, fame, health, 
-      apartment_item_number, apartment_item_max, 
-      item_1, item_2, item_3, 
-      item_4, item_5, item_6, 
-      item_7, item_8, item_9, 
-      item_10, item_11, item_12, 
-      item_13)
-    values (#{name,jdbcType=VARCHAR}, #{id,jdbcType=INTEGER}, Md5(#{password,jdbcType=VARCHAR}), 
+      apartment_item_number, apartment_item_max)
+    values (#{name,jdbcType=VARCHAR}, #{id,jdbcType=INTEGER}, #{password,jdbcType=VARCHAR}, 
       #{money,jdbcType=INTEGER}, #{deposit,jdbcType=INTEGER}, #{debt,jdbcType=INTEGER}, 
       #{day,jdbcType=INTEGER}, #{fame,jdbcType=INTEGER}, #{health,jdbcType=INTEGER}, 
-      #{apartmentItemNumber,jdbcType=INTEGER}, #{apartmentItemMax,jdbcType=INTEGER}, 
-      #{item1,jdbcType=INTEGER}, #{item2,jdbcType=INTEGER}, #{item3,jdbcType=INTEGER}, 
-      #{item4,jdbcType=INTEGER}, #{item5,jdbcType=INTEGER}, #{item6,jdbcType=INTEGER}, 
-      #{item7,jdbcType=INTEGER}, #{item8,jdbcType=INTEGER}, #{item9,jdbcType=INTEGER}, 
-      #{item10,jdbcType=INTEGER}, #{item11,jdbcType=INTEGER}, #{item12,jdbcType=INTEGER}, 
-      #{item13,jdbcType=INTEGER})
+      #{apartmentItemNumber,jdbcType=INTEGER}, #{apartmentItemMax,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="indi.zhuhai.pojo.Player">
     insert into player
@@ -104,45 +80,6 @@
       <if test="apartmentItemMax != null">
         apartment_item_max,
       </if>
-      <if test="item1 != null">
-        item_1,
-      </if>
-      <if test="item2 != null">
-        item_2,
-      </if>
-      <if test="item3 != null">
-        item_3,
-      </if>
-      <if test="item4 != null">
-        item_4,
-      </if>
-      <if test="item5 != null">
-        item_5,
-      </if>
-      <if test="item6 != null">
-        item_6,
-      </if>
-      <if test="item7 != null">
-        item_7,
-      </if>
-      <if test="item8 != null">
-        item_8,
-      </if>
-      <if test="item9 != null">
-        item_9,
-      </if>
-      <if test="item10 != null">
-        item_10,
-      </if>
-      <if test="item11 != null">
-        item_11,
-      </if>
-      <if test="item12 != null">
-        item_12,
-      </if>
-      <if test="item13 != null">
-        item_13,
-      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="name != null">
@@ -152,7 +89,7 @@
         #{id,jdbcType=INTEGER},
       </if>
       <if test="password != null">
-        Md5(#{password,jdbcType=VARCHAR}),
+        #{password,jdbcType=VARCHAR},
       </if>
       <if test="money != null">
         #{money,jdbcType=INTEGER},
@@ -178,45 +115,6 @@
       <if test="apartmentItemMax != null">
         #{apartmentItemMax,jdbcType=INTEGER},
       </if>
-      <if test="item1 != null">
-        #{item1,jdbcType=INTEGER},
-      </if>
-      <if test="item2 != null">
-        #{item2,jdbcType=INTEGER},
-      </if>
-      <if test="item3 != null">
-        #{item3,jdbcType=INTEGER},
-      </if>
-      <if test="item4 != null">
-        #{item4,jdbcType=INTEGER},
-      </if>
-      <if test="item5 != null">
-        #{item5,jdbcType=INTEGER},
-      </if>
-      <if test="item6 != null">
-        #{item6,jdbcType=INTEGER},
-      </if>
-      <if test="item7 != null">
-        #{item7,jdbcType=INTEGER},
-      </if>
-      <if test="item8 != null">
-        #{item8,jdbcType=INTEGER},
-      </if>
-      <if test="item9 != null">
-        #{item9,jdbcType=INTEGER},
-      </if>
-      <if test="item10 != null">
-        #{item10,jdbcType=INTEGER},
-      </if>
-      <if test="item11 != null">
-        #{item11,jdbcType=INTEGER},
-      </if>
-      <if test="item12 != null">
-        #{item12,jdbcType=INTEGER},
-      </if>
-      <if test="item13 != null">
-        #{item13,jdbcType=INTEGER},
-      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="indi.zhuhai.pojo.Player">
@@ -226,7 +124,7 @@
         ID = #{id,jdbcType=INTEGER},
       </if>
       <if test="password != null">
-        password = Md5(#{password,jdbcType=VARCHAR}),
+        password = #{password,jdbcType=VARCHAR},
       </if>
       <if test="money != null">
         money = #{money,jdbcType=INTEGER},
@@ -252,52 +150,13 @@
       <if test="apartmentItemMax != null">
         apartment_item_max = #{apartmentItemMax,jdbcType=INTEGER},
       </if>
-      <if test="item1 != null">
-        item_1 = #{item1,jdbcType=INTEGER},
-      </if>
-      <if test="item2 != null">
-        item_2 = #{item2,jdbcType=INTEGER},
-      </if>
-      <if test="item3 != null">
-        item_3 = #{item3,jdbcType=INTEGER},
-      </if>
-      <if test="item4 != null">
-        item_4 = #{item4,jdbcType=INTEGER},
-      </if>
-      <if test="item5 != null">
-        item_5 = #{item5,jdbcType=INTEGER},
-      </if>
-      <if test="item6 != null">
-        item_6 = #{item6,jdbcType=INTEGER},
-      </if>
-      <if test="item7 != null">
-        item_7 = #{item7,jdbcType=INTEGER},
-      </if>
-      <if test="item8 != null">
-        item_8 = #{item8,jdbcType=INTEGER},
-      </if>
-      <if test="item9 != null">
-        item_9 = #{item9,jdbcType=INTEGER},
-      </if>
-      <if test="item10 != null">
-        item_10 = #{item10,jdbcType=INTEGER},
-      </if>
-      <if test="item11 != null">
-        item_11 = #{item11,jdbcType=INTEGER},
-      </if>
-      <if test="item12 != null">
-        item_12 = #{item12,jdbcType=INTEGER},
-      </if>
-      <if test="item13 != null">
-        item_13 = #{item13,jdbcType=INTEGER},
-      </if>
     </set>
     where name = #{name,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="indi.zhuhai.pojo.Player">
     update player
     set ID = #{id,jdbcType=INTEGER},
-      password = Md5(#{password,jdbcType=VARCHAR}),
+      password = #{password,jdbcType=VARCHAR},
       money = #{money,jdbcType=INTEGER},
       deposit = #{deposit,jdbcType=INTEGER},
       debt = #{debt,jdbcType=INTEGER},
@@ -305,20 +164,7 @@
       fame = #{fame,jdbcType=INTEGER},
       health = #{health,jdbcType=INTEGER},
       apartment_item_number = #{apartmentItemNumber,jdbcType=INTEGER},
-      apartment_item_max = #{apartmentItemMax,jdbcType=INTEGER},
-      item_1 = #{item1,jdbcType=INTEGER},
-      item_2 = #{item2,jdbcType=INTEGER},
-      item_3 = #{item3,jdbcType=INTEGER},
-      item_4 = #{item4,jdbcType=INTEGER},
-      item_5 = #{item5,jdbcType=INTEGER},
-      item_6 = #{item6,jdbcType=INTEGER},
-      item_7 = #{item7,jdbcType=INTEGER},
-      item_8 = #{item8,jdbcType=INTEGER},
-      item_9 = #{item9,jdbcType=INTEGER},
-      item_10 = #{item10,jdbcType=INTEGER},
-      item_11 = #{item11,jdbcType=INTEGER},
-      item_12 = #{item12,jdbcType=INTEGER},
-      item_13 = #{item13,jdbcType=INTEGER}
+      apartment_item_max = #{apartmentItemMax,jdbcType=INTEGER}
     where name = #{name,jdbcType=VARCHAR}
   </update>
 </mapper>
