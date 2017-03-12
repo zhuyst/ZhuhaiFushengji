@@ -24,7 +24,7 @@ public class Event_itemJob extends QuartzJobBean{
 		int number = (int)(1 + Math.random() * event_number);
 		
 		if(active_number != 0){
-			event_itemService.passtiveEvent(event_number);
+			event_itemService.passtiveEvent(active_number);
 		}
 		event_itemService.acitveEvent(number);
 		active_number = number;

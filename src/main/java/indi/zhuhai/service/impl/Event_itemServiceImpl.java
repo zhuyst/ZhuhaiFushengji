@@ -26,7 +26,6 @@ public class Event_itemServiceImpl implements Event_itemService{
 		for(int i = 0;i < event_item.getEffectItemIdArray().length;i++){
 			itemService.setItemPrice(event_item.getEffectItemIdArray()[i], event_item.getEffectHandle().charAt(0),event_item.getEffectNumber());
 		}
-		this.event_itemDao.updateByPrimaryKeySelective(event_item);
 	}
 
 	@Override
@@ -35,7 +34,6 @@ public class Event_itemServiceImpl implements Event_itemService{
 		for(int i = 0;i < event_item.getEffectItemIdArray().length;i++){
 			itemService.backStartPrice(event_item.getEffectItemIdArray()[i]);
 		}
-		this.event_itemDao.updateByPrimaryKeySelective(event_item);
 	}
 
 }
