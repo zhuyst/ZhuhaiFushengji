@@ -58,16 +58,19 @@ public class Event_moneyServiceImpl implements Event_moneyService{
 			player.setMoney((int)(player.getMoney() * event_money.getEffectNumber()));
 		}
 		else if(effect_ID == -2){
-			player.setMoney((int)(player.getDeposit() * event_money.getEffectNumber()));
+			player.setDeposit((int)(player.getDeposit() * event_money.getEffectNumber()));
 		}
 		else {
 			if(event_money.getEffectHandle().charAt(0) == '+'){
+				if(playerItemService.getPlayerItem(player.getId(), effect_ID) == null) 
+					playerItemService.insertNewItem(player.getId(), effect_ID);
 				playerItemService.updateNumber(player.getId(), effect_ID, event_money.getEffectNumber().intValue());
 				player.setApartmentItemNumber(player.getApartmentItemNumber() + event_money.getEffectNumber().intValue());
 			}
 			else if(event_money.getEffectHandle().charAt(0) == '='){
-				playerItemService.updateNumber(player.getId(), effect_ID, event_money.getEffectNumber().intValue());
-				player.setApartmentItemNumber(player.getApartmentItemNumber() - playerItemService.getItemNumber(player.getId(), effect_ID));
+				int itemNumber = playerItemService.getItemNumber(player.getId(), effect_ID);
+				playerItemService.deleteItem(player.getId(), effect_ID);
+				player.setApartmentItemNumber(player.getApartmentItemNumber() - itemNumber);
 			}
 		}
 		this.playerService.setPlayer(player);

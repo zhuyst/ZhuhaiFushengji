@@ -56,11 +56,6 @@ public class PlayerServiceImpl implements PlayerService{
 			this.playerDao.insertSelective(player);
 			globalService.setNumberByVariable(Global_enum.Player_number, newID);
 			
-			int item_number = globalService.getNumberByVariable(Global_enum.Item_number);
-			for(int i = 1;i <= item_number;i++){
-				playerItemService.insertNewItem(newID, i);
-			}
-			
 			return true;
 		}
 		else return false;
@@ -85,6 +80,9 @@ public class PlayerServiceImpl implements PlayerService{
 		Player player = this.getPlayerByName(name);
 		PlayerItem playerItem = playerItemService.getPlayerItem(player.getId(), item_ID);
 		
+		if(playerItem == null) {
+			playerItem = playerItemService.insertNewItem(player.getId(), item_ID);
+		}
 		playerItemService.updateNumber(player.getId(), item_ID, playerItem.getNumber() + buy_number);
 		
 		player.setMoney(player.getMoney() - item_price * buy_number);
@@ -98,6 +96,9 @@ public class PlayerServiceImpl implements PlayerService{
 		PlayerItem playerItem = playerItemService.getPlayerItem(player.getId(), item_ID);
 		
 		playerItemService.updateNumber(player.getId(), item_ID, playerItem.getNumber() - sell_number);
+		if(playerItem.getNumber() - sell_number == 0) 
+			playerItemService.deleteItem(player.getId(), item_ID);
+		
 		player.setMoney(player.getMoney() + item_price * sell_number);
 		player.setApartmentItemNumber(player.getApartmentItemNumber() - sell_number);
 		
@@ -158,7 +159,7 @@ public class PlayerServiceImpl implements PlayerService{
 
 	@Override
 	public void restart(String name) {
-		Player player = new Player();
+		Player player = this.getPlayerByName(name);
 		player.setMoney(3000);
 		player.setDeposit(0);
 		player.setDebt(5000);
@@ -167,9 +168,7 @@ public class PlayerServiceImpl implements PlayerService{
 		player.setHealth(100);
 		player.setApartmentItemNumber(0);
 		player.setApartmentItemMax(100);
-		for(int i = 1;i <= globalService.getNumberByVariable(Global_enum.Item_number);i++){
-			playerItemService.updateNumber(player.getId(), i, 0);
-		}
+		playerItemService.deleteAllItem(player.getId());
 		this.playerDao.updateByPrimaryKey(player);
 	}
 

@@ -25,27 +25,37 @@ public class PlayerItemServiceImpl implements PlayerItemService{
 	
 	@Override
 	public int getItemNumber(int player_id, int item_id) {
-		return this.getPlayerItem(player_id, item_id).getNumber();
+		PlayerItem playerItem = this.getPlayerItem(player_id, item_id);
+		if(playerItem == null) return 0;
+		else return playerItem.getNumber();
 	}
 	
 	@Override
 	public PlayerItem[] getPlayerAllItem(int player_id) {
-		List<PlayerItem> list = playerItemDao.selectAllItem(player_id);
 		int item_number = globalService.getNumberByVariable(Global_enum.Item_number);
 		PlayerItem[] data = new PlayerItem[item_number];
 		for(int i = 0;i < item_number;i++){
-			data[i] = list.get(i);
+			PlayerItem playerItem = new PlayerItem();
+			playerItem.setPlayerId(player_id);
+			playerItem.setItemId(i + 1);
+			playerItem.setNumber(0);
+			data[i] = playerItem;
+		}
+		List<PlayerItem> list = playerItemDao.selectAllItem(player_id);
+		for(PlayerItem playerItem:list){
+			data[playerItem.getItemId() - 1] = playerItem;
 		}
 		return data;
 	}
 
 	@Override
-	public void insertNewItem(int player_id, int item_id) {
+	public PlayerItem insertNewItem(int player_id, int item_id) {
 		PlayerItem playerItem = new PlayerItem();
 		playerItem.setPlayerId(player_id);
 		playerItem.setItemId(item_id);
 		playerItem.setNumber(0);
 		playerItemDao.insert(playerItem);
+		return playerItem;
 	}
 
 	@Override
@@ -53,6 +63,16 @@ public class PlayerItemServiceImpl implements PlayerItemService{
 		PlayerItem playerItem = this.getPlayerItem(player_id, item_id);
 		playerItem.setNumber(number);
 		playerItemDao.updateByPrimaryKey(playerItem);
+	}
+
+	@Override
+	public void deleteItem(int player_id, int item_id) {
+		this.playerItemDao.deleteOneItem(player_id, item_id);
+	}
+
+	@Override
+	public void deleteAllItem(int player_id) {
+		this.playerItemDao.deleteAllItem(player_id);
 	}
 	
 }

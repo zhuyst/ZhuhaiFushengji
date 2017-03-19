@@ -46,11 +46,11 @@
     from playeritem
     where player_id = #{playerid,jdbcType=INTEGER} and item_id = #{itemid,jdbcType=INTEGER}
   </select>
-  <select id="selectAllItem" parameterType="java.lang.String" resultMap="BaseResultMap">
+  <select id="selectAllItem" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from playeritem
-    where player_id = #{playerId,jdbcType=VARCHAR}
+    where player_id = #{playerid,jdbcType=INTEGER}
   </select>
   <update id="updateByPrimaryKey" parameterType="indi.zhuhai.pojo.PlayerItem">
     update playeritem
@@ -58,4 +58,12 @@
     where player_id = #{playerId,jdbcType=INTEGER}
     and item_id = #{itemId,jdbcType=INTEGER}
   </update>
+  <delete id="deleteOneItem">
+    delete from playerItem
+    where player_id = #{playerid,jdbcType=INTEGER} and item_id = #{itemid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteAllItem">
+    delete from playerItem
+    where player_id = #{playerid,jdbcType=INTEGER}
+  </delete>
 </mapper>

@@ -1,0 +1,33 @@
+<html>
+<head>
+    <title>珠海浮生记数据库查询</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="select_table.js"></script>
+</head>
+<body>
+
+<form>
+    <div class="text" style=" text-align:center;">
+        <h1>珠海浮生记数据库查询</h1>
+        <b>Select a table:</b>
+        <select name="tables" onchange="showTable(this.value)">
+            <option value="" selected="selected">未选择</option>
+            <option value="apartment">apartment</option>
+            <option value="event_health">event_health</option>
+            <option value="event_item">event_item</option>
+            <option value="event_money">event_money</option>
+            <option value="global">global</option>
+            <option value="item">item</option>
+            <option value="pill">pill</option>
+            <option value="player">player</option>
+            <option value="playeritem">playeritem</option>
+            <option value="ranking_list">ranking_list</option>
+        </select>
+        <p>
+        <div id="txtHint"><b>Table info will be listed here.</b></div>
+        </p>
+    </div>
+</form>
+
+</body>
+</html>
